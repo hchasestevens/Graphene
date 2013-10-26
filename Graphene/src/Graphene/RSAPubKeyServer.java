@@ -1,20 +1,20 @@
 package Graphene;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.PrintWriter;
-import java.math.BigInteger;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.Scanner;
+import java.security.PublicKey;
+
+import org.apache.commons.codec.binary.Base64;
 
 public class RSAPubKeyServer extends Thread {
 	private final String RSAPubKey;
 	public static final int PORT = 8051;
-	public boolean isRunning;
+	private boolean isRunning;
 	
 	public RSAPubKeyServer( String RSAPubKey ){
+		Base64 base64 = new Base64();
 		this.RSAPubKey = RSAPubKey;
 		this.isRunning = true;
 	}

@@ -5,7 +5,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.InetAddress;
 import java.util.Scanner;
-import java.util.UUID;
+
+import org.apache.commons.codec.binary.Base64;
 
 public class Main {
     private static final String CMD_HELP = "help";
@@ -27,6 +28,9 @@ public class Main {
             CMD_HELP_HELP + System.lineSeparator() +
             CMD_QUIT_HELP + System.lineSeparator() +
             CMD_DECRYPT_HELP + System.lineSeparator();
+    
+    public static final String RSA_PRIVATE_KEY_FILE = ".private.key";
+    public static final String RSA_PUBLIC_KEY_FILE = ".public.key";
 
     public static void main(String[] args) throws IOException {
         String line = "";
@@ -38,6 +42,15 @@ public class Main {
         // Start up incoming request server
         IncomingRequestServer incomingServer = new IncomingRequestServer();
         incomingServer.start();
+        // Start up incoming RSA pubkey request server
+        RSAPubKeyServer pubkey_server;
+		try {
+			pubkey_server = new RSAPubKeyServer(RSA.keyToString(RSA.getPublicKey()));
+	        pubkey_server.start();
+		} catch (Exception e) {
+			e.printStackTrace();
+			System.out.println("Failed to start public key server!!!");
+		}
 
         //  open up standard input
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
