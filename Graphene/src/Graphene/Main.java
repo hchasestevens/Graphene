@@ -34,6 +34,9 @@ public class Main {
 
         NetworkInfo.NodeIps.add("129.215.59.42");
 
+        // Start up incoming request server
+        (new IncomingRequestServer()).run();
+
         //  open up standard input
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
