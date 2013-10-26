@@ -23,6 +23,8 @@ public class Main {
     private static final String CMD_ADD_CLIENT = "client";
     private static final String CMD_ADD_CLIENT_HELP = CMD_ADD_CLIENT + " - add a client, format: client <ip>";
 
+    private static final String PARAM_RESET = "-r";
+
     private static final String HELP_TEXT =
             CMD_HELP_HELP + System.lineSeparator() +
             CMD_QUIT_HELP + System.lineSeparator() +
@@ -31,9 +33,17 @@ public class Main {
     public static void main(String[] args) throws IOException {
         String line = "";
 
+        if(args.length > 0 && args[0].equals(PARAM_RESET)) {
+            NodeIPSync.reset();
+        }
+
         NetworkInfo.MyIp = InetAddress.getLocalHost().getHostAddress();
 
-        NetworkInfo.NodeIps.add("172.20.128.33");
+        NodeIPSync.StoreIp(NetworkInfo.MyIp);
+
+        for(String ip : NodeIPSync.GetIps()) {
+            NetworkInfo.NodeIps.add(ip);
+        }
 
         // Start up incoming request server
         IncomingRequestServer incomingServer = new IncomingRequestServer();
@@ -75,6 +85,8 @@ public class Main {
                 NetworkInfo.NodeIps.add(ip);
             }
         }
+
+        NodeIPSync.RemoveIp();
 
         incomingServer.isRunning = false;
     }
