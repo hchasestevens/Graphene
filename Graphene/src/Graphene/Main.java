@@ -1,8 +1,52 @@
 package Graphene;
 
-public class Main {
-    public static void main(String[] args)
-    {
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.Scanner;
 
+public class Main {
+    private static final String CMD_HELP = "help";
+    private static final String CMD_HELP_HELP = CMD_HELP + " - show this message";
+
+    private static final String CMD_QUIT = "quit";
+    private static final String CMD_QUIT_HELP = CMD_QUIT + " - terminate the application";
+
+    private static final String CMD_DECRYPT = "decrypt";
+    private static final String CMD_DECRYPT_HELP = CMD_DECRYPT + " - decrypt a file, format: decrypt <fileName>";
+
+    private static final String CMD_CREATE = "create";
+    private static final String CMD_CREATE_HELP = CMD_CREATE + " - create a file, format: create <fileName> <data>";
+
+    private static final String HELP_TEXT =
+            CMD_HELP_HELP + System.lineSeparator() +
+            CMD_QUIT_HELP + System.lineSeparator() +
+            CMD_DECRYPT_HELP + System.lineSeparator();
+
+    public static void main(String[] args) throws IOException {
+        String line = "";
+
+        //  open up standard input
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+
+        while(!line.equals(CMD_QUIT)) {
+            line = br.readLine();
+            Scanner sc = new Scanner(line);
+
+            if(sc.next().equals(CMD_HELP)) {
+                System.out.println(HELP_TEXT);
+            }
+            else if(sc.next().equals(CMD_DECRYPT)) {
+                String fileName = sc.next();
+
+
+            }
+            else if(sc.next().equals(CMD_CREATE)) {
+                String fileName = sc.next();
+                String data = sc.next();
+
+
+            }
+        }
     }
 }
