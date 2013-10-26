@@ -1,4 +1,4 @@
-package threshsig.testing;
+/*package threshsig.testing;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -124,3 +124,4 @@ public class ThreshTest {
         + elapsed + " Average: " + (float) (elapsed / RUNS));
   }
 }
+                */
