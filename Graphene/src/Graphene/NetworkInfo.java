@@ -1,6 +1,7 @@
 package Graphene;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Created with IntelliJ IDEA.
@@ -13,4 +14,6 @@ public class NetworkInfo {
     public static String MyIp;
 
     public static ArrayList<String> NodeIps = new ArrayList<String>();
+    
+    public static HashMap<String, String> pubkeyCache = new HashMap<String, String>();
 }
