@@ -33,14 +33,14 @@ public class CreateRequest {
 
     private void notifyServer(String serverIp) {
         try {
-            Socket socket = new Socket(serverIp,
-                    IncomingRequestServer.PORT);
+            Socket socket = new Socket(serverIp, IncomingRequestServer.PORT);
             PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
 
             System.out.println("Requesting creation of file " + this.fileName + " to " + serverIp);
 
-            out.write("create " + this.fileName + " " + this.data);
+            out.println("create " + this.fileName + " " + this.data);
 
+            socket.close();
         } catch (UnknownHostException e) {
             System.out.println("Creation: " + e.getMessage());
         } catch (IOException e) {

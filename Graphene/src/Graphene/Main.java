@@ -32,7 +32,7 @@ public class Main {
 
         String myIp = args[0];
 
-        NetworkInfo.NodeIps.add("129.215.59.42");
+        NetworkInfo.NodeIps.add("172.20.128.33");
 
         // Start up incoming request server
         IncomingRequestServer incomingServer = new IncomingRequestServer();

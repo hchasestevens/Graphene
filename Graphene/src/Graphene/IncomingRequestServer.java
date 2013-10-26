@@ -30,48 +30,47 @@ public class IncomingRequestServer extends Thread {
 
             System.out.println("Setting up incoming request server on port " + PORT);
 
-            Socket fromClientSocket = servSocket.accept();
+            while(isRunning) {
+                Socket fromClientSocket = servSocket.accept();
 
-            PrintWriter pw = new PrintWriter(fromClientSocket.getOutputStream(), true);
-            BufferedReader br = new BufferedReader(new InputStreamReader(fromClientSocket.getInputStream()));
+                PrintWriter pw = new PrintWriter(fromClientSocket.getOutputStream(), true);
+                BufferedReader br = new BufferedReader(new InputStreamReader(fromClientSocket.getInputStream()));
 
-            while (isRunning) {
-                str = br.readLine();
-                if(str == null) continue;
+                while ((str = br.readLine()) != null) {
+                    Scanner sc = new Scanner(str);
 
-                Scanner sc = new Scanner(str);
+                    if(sc.next().equals("decrypt"))
+                    {
+                        //String returnIp = sc.next();
+                        String fileName = sc.next();
 
-                if(sc.next().equals("decrypt"))
-                {
-                    //String returnIp = sc.next();
-                    String fileName = sc.next();
+                        System.out.println("Decrypting file " + fileName);
 
-                    System.out.println("Decrypting file " + fileName);
+                        EncryptedFile file = DataStore.getFile(fileName);
+                        BigInteger partialDecryption = file.partialDecryption();
+                        pw.println(partialDecryption.toString());
+                    }
+                    else if (sc.next().equals(("create")))
+                    {
+                        String fileName = sc.next();
+                        String data = sc.next();
+                        //BigInteger sig = sc.nextBigInteger();
 
-                    EncryptedFile file = DataStore.getFile(fileName);
-                    BigInteger partialDecryption = file.partialDecryption();
-                    pw.write(partialDecryption.toString());
+                        DataStore.create(fileName, data);
+                    }
+                    else if (sc.next().equals(("distrust")))
+                    {
+
+                    }
+
+                    System.out.println("The message: " + str);
                 }
-                else if (sc.next().equals(("create")))
-                {
-                    String fileName = sc.next();
-                    String data = sc.next();
-                    //BigInteger sig = sc.nextBigInteger();
 
-                    DataStore.create(fileName, data);
-                }
-                else if (sc.next().equals(("distrust")))
-                {
+                pw.close();
+                br.close();
 
-                }
-
-                System.out.println("The message: " + str);
+                fromClientSocket.close();
             }
-
-            pw.close();
-            br.close();
-
-            fromClientSocket.close();
         } catch (IOException e) {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         }
