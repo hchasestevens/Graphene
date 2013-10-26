@@ -32,6 +32,8 @@ public class Main {
 
         String myIp = args[0];
 
+        NetworkInfo.NodeIps.add("129.215.59.42");
+
         //  open up standard input
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
@@ -39,24 +41,26 @@ public class Main {
             line = br.readLine();
             Scanner sc = new Scanner(line);
 
-            if(sc.next().equals(CMD_HELP)) {
+            String command = sc.next();
+
+            if(command.equals(CMD_HELP)) {
                 System.out.println(HELP_TEXT);
             }
-            else if(sc.next().equals(CMD_DECRYPT)) {
+            else if(command.equals(CMD_DECRYPT)) {
                 String fileName = sc.next();
 
                 DecryptionRequest rq = new DecryptionRequest(fileName);
-                rq.Wait();
+                //rq.Wait();
 
 
             }
-            else if(sc.next().equals(CMD_CREATE)) {
+            else if(command.equals(CMD_CREATE)) {
                 String fileName = sc.next();
                 String data = sc.next();
 
 
             }
-            else if(sc.next().equals(CMD_ADD_CLIENT)) {
+            else if(command.equals(CMD_ADD_CLIENT)) {
                 String ip = sc.next();
 
 

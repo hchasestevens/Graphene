@@ -17,7 +17,7 @@ public class DataStore {
     public static void create(String fileName, String file, BigInteger sig)
     {
         synchronized (files) {
-            files.put(new EncryptedFile(fileName file, sig));
+            files.put(fileName, new EncryptedFile(fileName, file, sig));
         }
     }
 

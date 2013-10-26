@@ -14,6 +14,7 @@ public class DecryptionRequest {
     public DecryptionRequest(String fileName)
     {
         // Choose k random ip's
+        // Chase's ip is 129.215.59.42 BULLSHIT
         (new DataRequestServer(NetworkInfo.NodeIps.get(0), fileName, new IDecryptionCallback() {
             public void DataReceived(BigInteger data)
             {

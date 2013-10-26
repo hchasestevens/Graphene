@@ -55,6 +55,10 @@ public class IncomingRequestServer extends Thread {
 
                     DataStore.create(fileName, data, sig);
                 }
+                else if (sc.next().equals(("distrust")))
+                {
+
+                }
 
                 System.out.println("The message: " + str);
             }
