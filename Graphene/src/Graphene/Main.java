@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Scanner;
+import java.util.UUID;
 
 public class Main {
     private static final String CMD_HELP = "help";
@@ -18,6 +19,9 @@ public class Main {
     private static final String CMD_CREATE = "create";
     private static final String CMD_CREATE_HELP = CMD_CREATE + " - create a file, format: create <fileName> <data>";
 
+    private static final String CMD_ADD_CLIENT = "client";
+    private static final String CMD_ADD_CLIENT_HELP = CMD_ADD_CLIENT + " - add a client, format: client <ip>";
+
     private static final String HELP_TEXT =
             CMD_HELP_HELP + System.lineSeparator() +
             CMD_QUIT_HELP + System.lineSeparator() +
@@ -25,6 +29,8 @@ public class Main {
 
     public static void main(String[] args) throws IOException {
         String line = "";
+
+        String myIp = args[0];
 
         //  open up standard input
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -39,11 +45,19 @@ public class Main {
             else if(sc.next().equals(CMD_DECRYPT)) {
                 String fileName = sc.next();
 
+                DecryptionRequest rq = new DecryptionRequest(fileName);
+                rq.Wait();
+
 
             }
             else if(sc.next().equals(CMD_CREATE)) {
                 String fileName = sc.next();
                 String data = sc.next();
+
+
+            }
+            else if(sc.next().equals(CMD_ADD_CLIENT)) {
+                String ip = sc.next();
 
 
             }
