@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.InetAddress;
+import java.nio.file.*;
 import java.util.Scanner;
 import java.util.UUID;
 
@@ -31,14 +32,12 @@ public class Main {
             CMD_DECRYPT_HELP + System.lineSeparator();
 
     public static void main(String[] args) throws IOException {
-        String line = "";
-
         if(args.length > 0 && args[0].equals(PARAM_RESET)) {
             NodeIPSync.reset();
         }
 
+        // Init node network data
         NetworkInfo.MyIp = InetAddress.getLocalHost().getHostAddress();
-
         NodeIPSync.StoreIp(NetworkInfo.MyIp);
 
         for(String ip : NodeIPSync.GetIps()) {
@@ -49,8 +48,15 @@ public class Main {
         IncomingRequestServer incomingServer = new IncomingRequestServer();
         incomingServer.start();
 
-        //  open up standard input
+        // Start up folder change watcher
+        Path dataFolder = Paths.get("files");
+        if(!Files.exists(dataFolder)) Files.createDirectory(dataFolder);
+        FileWatcher fileWatcher = new FileWatcher(dataFolder);
+        fileWatcher.start();
+
+        // Open up standard input
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        String line = "";
 
         while(!line.equals(CMD_QUIT)) {
             line = br.readLine();
@@ -88,6 +94,7 @@ public class Main {
 
         NodeIPSync.RemoveIp();
 
+        fileWatcher.isRunning = false;
         incomingServer.isRunning = false;
     }
 }

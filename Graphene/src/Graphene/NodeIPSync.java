@@ -76,7 +76,6 @@ public class NodeIPSync {
     private static void storeValue(String key, String value) {
         try {
             String data = URLEncoder.encode("data", "UTF-8") + "=" + URLEncoder.encode(value, "UTF-8");
-            System.out.println(data);
             // Send data
             URL url = new URL("http://api.openkeyval.org/" + key);
             URLConnection conn = url.openConnection();
