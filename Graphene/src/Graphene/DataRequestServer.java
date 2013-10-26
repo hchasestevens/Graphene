@@ -62,7 +62,7 @@ public class DataRequestServer extends Thread {
 
 			String str;
 			while ((str = in_buffer.readLine()) != null) {
-				if (str != "") {
+				if (!str.isEmpty()) {
 					callback.DataReceived(new BigInteger(str));
 					break;
 				}
