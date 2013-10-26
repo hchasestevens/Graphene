@@ -20,6 +20,11 @@ public class DecryptionRequest {
             {
 
             }
+
+            public void OnError(String error)
+            {
+                System.out.println("Request error" + error);
+            }
         })).start();
     }
 

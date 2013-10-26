@@ -13,12 +13,9 @@ public class EncryptedFile {
     public String fileName;
     public String data;
 
-    private BigInteger sig;
-
-    public EncryptedFile(String fileName, String data, BigInteger sig) {
+    public EncryptedFile(String fileName, String data) {
         this.fileName = fileName;
         this.data = data;
-        this.sig = sig;
     }
 
     public BigInteger partialDecryption() {

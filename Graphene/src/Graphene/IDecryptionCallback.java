@@ -11,4 +11,5 @@ import java.math.BigInteger;
  */
 public interface IDecryptionCallback {
     public void DataReceived(BigInteger data);
+    public void OnError(String message);
 }

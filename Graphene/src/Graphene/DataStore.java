@@ -14,10 +14,10 @@ import java.util.Hashtable;
 public class DataStore {
     private static Dictionary<String, EncryptedFile> files = new Hashtable<String, EncryptedFile>();
 
-    public static void create(String fileName, String file, BigInteger sig)
+    public static void create(String fileName, String file)
     {
         synchronized (files) {
-            files.put(fileName, new EncryptedFile(fileName, file, sig));
+            files.put(fileName, new EncryptedFile(fileName, file));
         }
     }
 

@@ -56,9 +56,9 @@ public class IncomingRequestServer extends Thread {
                 {
                     String fileName = sc.next();
                     String data = sc.next();
-                    BigInteger sig = sc.nextBigInteger();
+                    //BigInteger sig = sc.nextBigInteger();
 
-                    DataStore.create(fileName, data, sig);
+                    DataStore.create(fileName, data);
                 }
                 else if (sc.next().equals(("distrust")))
                 {
