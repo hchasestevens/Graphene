@@ -16,6 +16,8 @@ public class DataStore {
 
     public static void create(String fileName, String file)
     {
+        System.out.println("Creating file " + fileName + " with data " + file);
+
         synchronized (files) {
             files.put(fileName, new EncryptedFile(fileName, file));
         }

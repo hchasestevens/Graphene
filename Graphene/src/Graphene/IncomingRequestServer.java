@@ -38,8 +38,9 @@ public class IncomingRequestServer extends Thread {
 
                 while ((str = br.readLine()) != null) {
                     Scanner sc = new Scanner(str);
+                    String command = sc.next();
 
-                    if(sc.next().equals("decrypt"))
+                    if(command.equals("decrypt"))
                     {
                         //String returnIp = sc.next();
                         String fileName = sc.next();
@@ -50,7 +51,7 @@ public class IncomingRequestServer extends Thread {
                         BigInteger partialDecryption = file.partialDecryption();
                         pw.println(partialDecryption.toString());
                     }
-                    else if (sc.next().equals(("create")))
+                    else if (command.equals(("create")))
                     {
                         String fileName = sc.next();
                         String data = sc.next();
@@ -58,7 +59,7 @@ public class IncomingRequestServer extends Thread {
 
                         DataStore.create(fileName, data);
                     }
-                    else if (sc.next().equals(("distrust")))
+                    else if (command.equals(("distrust")))
                     {
 
                     }
