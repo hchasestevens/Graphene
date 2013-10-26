@@ -19,6 +19,8 @@ import java.util.Scanner;
 public class IncomingRequestServer extends Thread {
     public static final int PORT = 8050;
 
+    public boolean isRunning = true;
+
     public void run() {
         String str;
 
@@ -33,7 +35,10 @@ public class IncomingRequestServer extends Thread {
             PrintWriter pw = new PrintWriter(fromClientSocket.getOutputStream(), true);
             BufferedReader br = new BufferedReader(new InputStreamReader(fromClientSocket.getInputStream()));
 
-            while ((str = br.readLine()) != null) {
+            while (isRunning) {
+                str = br.readLine();
+                if(str == null) continue;
+
                 Scanner sc = new Scanner(str);
 
                 if(sc.next().equals("decrypt"))
