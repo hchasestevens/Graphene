@@ -62,7 +62,8 @@ public class Main {
                 String fileName = sc.next();
                 String data = sc.next();
 
-
+                CreateRequest request = new CreateRequest(fileName, data);
+                request.run();
             }
             else if(command.equals(CMD_ADD_CLIENT)) {
                 String ip = sc.next();
