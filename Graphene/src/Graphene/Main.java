@@ -3,6 +3,7 @@ package Graphene;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.InetAddress;
 import java.util.Scanner;
 import java.util.UUID;
 
@@ -30,7 +31,7 @@ public class Main {
     public static void main(String[] args) throws IOException {
         String line = "";
 
-        String myIp = args[0];
+        NetworkInfo.MyIp = InetAddress.getLocalHost().getHostAddress();
 
         NetworkInfo.NodeIps.add("172.20.128.33");
 
@@ -62,18 +63,19 @@ public class Main {
                 String fileName = sc.next();
                 String data = sc.next();
 
+                // Create file in local node
+                DataStore.create(fileName, data);
+
+                // Let other nodes know of the change
                 CreateRequest request = new CreateRequest(fileName, data);
                 request.run();
             }
             else if(command.equals(CMD_ADD_CLIENT)) {
                 String ip = sc.next();
-
-
+                NetworkInfo.NodeIps.add(ip);
             }
         }
 
         incomingServer.isRunning = false;
     }
-    
-    
 }
