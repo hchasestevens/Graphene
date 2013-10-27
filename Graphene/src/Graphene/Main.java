@@ -72,7 +72,9 @@ public class Main {
 
         while(!line.equals(CMD_QUIT)) {
             line = br.readLine();
+
             Scanner sc = new Scanner(line);
+            if(!sc.hasNext()) continue;
 
             String command = sc.next();
 

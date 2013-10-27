@@ -22,20 +22,17 @@ import java.util.ArrayList;
  */
 public class DecryptionRequest {
 
-
-
     public DecryptionRequest(String fileName)
     {
         // Choose k random ip's
-        int k = NetworkInfo.NodeIps.size();
 
         final EncryptedData data = new EncryptedData();
         data.encryptedData = DataStore.getFileContents(fileName);
         data.secretShare = new ArrayList<SecretShare.ShareInfo>();
 
+        data.secretShare.add(DataStore.Shares.get(fileName));
+        int k = data.secretShare.get(0).getPublicInfo().getK() - 1;
         DataRequestServer[] requests = new DataRequestServer[k];
-
-
 
         for(int i = 0; i < k; i++) {
             requests[i] = new DataRequestServer(NetworkInfo.NodeIps.get(i), fileName, new IDecryptionCallback() {
@@ -63,7 +60,7 @@ public class DecryptionRequest {
             }
         }
 
-        data.secretShare.add(DataStore.Shares.get(fileName));
+
 
         try {
             String res = EncryptUtil.decrypt(data);
