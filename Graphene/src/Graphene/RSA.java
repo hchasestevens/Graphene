@@ -161,6 +161,7 @@ public class RSA {
 		// We are Client
 		
 		//testing working:
+		System.out.println("Using UTF-8");
 		return new String (data, "UTF-8");
 		
 //		PrivateKey clientPrivKey = getPrivateKey();
