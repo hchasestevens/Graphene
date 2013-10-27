@@ -43,13 +43,16 @@ public class NodeIPSync {
         String nodeRes = getValue(NODES_KEY);
         String[] nodes = nodeRes.split(" ");
 
-        List<String> nodeList = Arrays.asList(nodes);
-        nodeList.remove(ourId.toString());
-
         StringBuilder builder = new StringBuilder();
-        for(String s : nodeList) {
-            builder.append(s);
-            builder.append(" ");
+        for(int i = 0; i < nodes.length; i++) {
+            if(!nodes[i].isEmpty()) {
+                String ip = getValue(nodes[i]);
+
+                if(!ip.trim().equals(NetworkInfo.MyIp)) {
+                    builder.append(nodes[i]);
+                    builder.append(" ");
+                }
+            }
         }
 
         storeValue(NODES_KEY, builder.toString());

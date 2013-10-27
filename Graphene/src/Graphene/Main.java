@@ -99,6 +99,8 @@ public class Main {
 
         fileWatcher.isRunning = false;
         incomingServer.isRunning = false;
+
+        System.out.println("Exiting");
     }
 
     private static void refreshNodes() {

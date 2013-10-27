@@ -76,7 +76,8 @@ public class DataStore {
         EncryptedData data = null;
 
         try {
-            data = EncryptUtil.encrypt(contents, NetworkInfo.NodeIps.size(), NetworkInfo.NodeIps.size() + 1);
+            //data = EncryptUtil.encrypt(contents, NetworkInfo.NodeIps.size(), NetworkInfo.NodeIps.size() + 1);
+            data = EncryptUtil.encrypt(contents, 2, 3);
 
             Shares.put(fileName, data.secretShare.get(0));
 
