@@ -39,6 +39,7 @@ public class FileWatcher extends Thread {
                         String fileName = event.context().toString();
                         if(DataStore.hasFile(fileName)) continue;
 
+                        System.out.println("FS: File " + event.context() + " was created");
                         EncryptedData data = DataStore.encrypt(fileName);
 
                         // Let other nodes know of the change
@@ -51,8 +52,6 @@ public class FileWatcher extends Thread {
                     else if(event.kind() == StandardWatchEventKinds.ENTRY_DELETE) {
 
                     }
-
-                    System.out.println(event.kind() + ": "+ event.context());
                 }
 
                 boolean valid = key.reset();
