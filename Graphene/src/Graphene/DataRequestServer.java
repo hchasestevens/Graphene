@@ -45,10 +45,6 @@ public class DataRequestServer extends Thread {
 					break;
 				}
 			}
-
-            out.close();
-            socket.close();
-            in_buffer.close();
 		} catch (UnknownHostException e) {
 			this.callback.OnError(e.getMessage());
 		} catch (IOException e) {

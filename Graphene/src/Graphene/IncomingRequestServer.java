@@ -1,13 +1,11 @@
 package Graphene;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
+import java.io.*;
 import java.math.BigInteger;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.nio.charset.StandardCharsets;
 import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.util.Scanner;
@@ -29,7 +27,7 @@ public class IncomingRequestServer extends Thread {
 
         ServerSocket servSocket = null;
         Socket fromClientSocket = null;
-        PrintWriter pw = null;
+        OutputStream out = null;
         BufferedReader br = null;
 
         try {
@@ -40,7 +38,7 @@ public class IncomingRequestServer extends Thread {
             while(isRunning) {
                 fromClientSocket = servSocket.accept();
 
-                pw = new PrintWriter(fromClientSocket.getOutputStream(), true);
+                out = fromClientSocket.getOutputStream();
                 br = new BufferedReader(new InputStreamReader(fromClientSocket.getInputStream()));
 
                 while ((str = br.readLine()) != null) {
@@ -60,9 +58,8 @@ public class IncomingRequestServer extends Thread {
                         //String data = partialDecryption.toString();
                         String data = "bullshit";
 
-                        String payload = RSA.encrypt_outgoing(clientIp, data);
-                        
-                        pw.println(payload);
+                        byte[] payload = RSA.encrypt_outgoing(clientIp, data);
+                        out.write(payload);
                     }
                     else if (command.equals(("create")))
                     {
@@ -70,9 +67,9 @@ public class IncomingRequestServer extends Thread {
                         String data = sc.next();
                         //BigInteger sig = sc.nextBigInteger();
                         
-                        data = RSA.decrypt_incoming(clientIp, data);
+                        byte[] actualdata = RSA.decrypt_incoming(clientIp, data);
 
-                        DataStore.create(fileName, data);
+                        //DataStore.create(fileName, data);
                     }
                     else if (command.equals(("distrust")))
                     {
@@ -88,7 +85,7 @@ public class IncomingRequestServer extends Thread {
 			// TODO Auto-generated catch block //RSA key stuff
 			e.printStackTrace();
 		} finally {
-            pw.close();
+            out.close();
             try {
                 br.close();
                 fromClientSocket.close();

@@ -12,6 +12,6 @@ import java.util.List;
  * @author alesis
  */
 public class EncryptedData {
-    List<SecretShare.ShareInfo> secretShare;
-    byte[] encryptedData;
+    public List<SecretShare.ShareInfo> secretShare;
+    public byte[] encryptedData;
 }
