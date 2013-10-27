@@ -142,18 +142,17 @@ public class RSA {
 	}
 	
 	
-	public static String encrypt_outgoing(String clientIp, String data) throws Exception{
+	public static byte[] encrypt_outgoing(String clientIp, String data) throws Exception{
 		// returns Client.Pubkey.Encrypt(data)
 		// We are Server
 		String clientPubkeyStr = RSAPubKeyClient.RSAPubKeyClient(clientIp);
         PublicKey clientPubkey = (PublicKey) stringToKey(clientPubkeyStr, KeyType.PUBLIC);
         byte[] encrypted_data = encrypt(data, clientPubkey);
-        String payload = new String(encrypted_data);
-		return payload;
+		return encrypted_data;
 	}
 	
 	
-	public static String decrypt_incoming(String serverIP, String data) throws Exception{
+	public static String decrypt_incoming(String serverIP, byte[] data) throws Exception{
 		// returns Client.Privkey.Decrypt(data)
 		// We are Client
 		PrivateKey clientPrivKey = getPrivateKey();
