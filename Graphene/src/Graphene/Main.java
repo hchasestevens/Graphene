@@ -43,7 +43,7 @@ public class Main {
         }
 
         // Init node network data
-        NetworkInfo.MyIp = InetAddress.getByName("localhost").getHostAddress();
+        NetworkInfo.MyIp = InetAddress.getLocalHost().getHostAddress();
         NodeIPSync.StoreIp(NetworkInfo.MyIp);
 
         refreshNodes();
@@ -62,9 +62,8 @@ public class Main {
 		}
 
         // Start up folder change watcher
-        Path dataFolder = Paths.get("files");
-        if(!Files.exists(dataFolder)) Files.createDirectory(dataFolder);
-        FileWatcher fileWatcher = new FileWatcher(dataFolder);
+        DataStore.init();
+        FileWatcher fileWatcher = new FileWatcher(DataStore.FILE_PATH);
         fileWatcher.start();
 
         // Open up standard input
