@@ -31,7 +31,7 @@ public class RSAPubKeyServer extends Thread {
 
                 PrintWriter pw = new PrintWriter(fromClientSocket.getOutputStream(), true);
 				
-				pw.println(this.RSAPubKey);
+				pw.print(this.RSAPubKey);
                 pw.close();
 
                 fromClientSocket.close();

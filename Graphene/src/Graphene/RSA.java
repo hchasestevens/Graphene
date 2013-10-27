@@ -4,14 +4,15 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.security.Key;
+import java.security.KeyFactory;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.PrivateKey;
 import java.security.PublicKey;
+import java.security.spec.X509EncodedKeySpec;
 
 import javax.crypto.Cipher;
 
@@ -131,11 +132,12 @@ public class RSA {
 	public static Key stringToKey(String str, KeyType keyType) throws Exception{
 		Base64 base64 = new Base64();
 		byte[] encodedKey = base64.decode(str);
-		ObjectInputStream inputStream = new ObjectInputStream(new ByteArrayInputStream(encodedKey));
+		X509EncodedKeySpec spec = new X509EncodedKeySpec(encodedKey);
+		KeyFactory kf = KeyFactory.getInstance("RSA");
 		if (keyType == keyType.PRIVATE)
-			return (PrivateKey) inputStream.readObject();
+			return kf.generatePrivate(spec);
 		if (keyType == keyType.PUBLIC)
-			return (PublicKey) inputStream.readObject();
+			return kf.generatePublic(spec);
 		throw new Exception("keyType must be PUBLIC or PRIVATE.");
 	}
 	
