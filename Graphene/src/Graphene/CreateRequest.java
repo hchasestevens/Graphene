@@ -2,6 +2,7 @@ package Graphene;
 
 import com.sun.corba.se.impl.orbutil.ObjectWriter;
 import com.tiemens.secretshare.engine.SecretShare;
+import crypto.EncryptUtil;
 
 import java.io.*;
 import java.math.BigInteger;
@@ -19,10 +20,10 @@ import java.util.List;
  */
 public class CreateRequest {
     private String fileName;
-    private String data;
+    private byte[] data;
     private List<SecretShare.ShareInfo> shares;
 
-    public CreateRequest(String fileName, String data, List<SecretShare.ShareInfo> shares) {
+    public CreateRequest(String fileName, byte[] data, List<SecretShare.ShareInfo> shares) {
         this.fileName = fileName;
         this.data = data;
         this.shares = shares;
@@ -52,8 +53,12 @@ public class CreateRequest {
             out.writeUTF("create");
             out.writeUTF(this.fileName);
 
+            out.writeInt(data.length);
+            out.write(data);
 
-            out.println("create " + this.fileName + " " + this.data + " " + share.getPublicInfo().);
+            byte[] shareData = EncryptUtil.shareToByteArray(share);
+            out.writeInt(shareData.length);
+            out.write(shareData);
         } catch (UnknownHostException e) {
             System.out.println("Unknown Host: " + e.getMessage());
         } catch (IOException e) {
@@ -63,7 +68,6 @@ public class CreateRequest {
 			e.printStackTrace();
 		}
         finally {
-            out.close();
             try {
                 socket.close();
             } catch (IOException e) {

@@ -9,6 +9,7 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 
 import com.tiemens.secretshare.engine.SecretShare;
+import crypto.EncryptUtil;
 
 public class DataRequestServer extends Thread {
 	private final String server_ip;
@@ -39,14 +40,11 @@ public class DataRequestServer extends Thread {
             out.writeUTF("decrypt");
             out.writeUTF(this.resource_id);
             
-			Integer bytelen = in_buffer.readInt();
-			byte[] data = new byte[bytelen];
-			byte incoming;
-			for (int i = 0; i < bytelen; i++){
-				data[i] = in_buffer.readByte();
-			}
+			int shareLen = in_buffer.readInt();
+			byte[] data = new byte[shareLen];
+			in_buffer.read(data, 0, shareLen);
 
-			callback.DataReceived(new SecretShare.ShareInfo(data));
+			callback.DataReceived(EncryptUtil.byteArrayToShare(data));
 			
 		} catch (UnknownHostException e) {
 			this.callback.OnError(e.getMessage());
@@ -56,7 +54,6 @@ public class DataRequestServer extends Thread {
 			// TODO Auto-generated catch block //RSA bullshit
 			e.printStackTrace();
 		} finally {
-            out.close();
             try {
                 in_buffer.close();
                 socket.close();

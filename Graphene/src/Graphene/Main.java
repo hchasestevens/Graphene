@@ -89,14 +89,14 @@ public class Main {
             }
             else if(command.equals(CMD_CREATE)) {
                 String fileName = sc.next();
-                String data = sc.next();
+                //String data = sc.next();
 
                 // Create file in local node
                 //DataStore.create(fileName, data);
 
                 // Let other nodes know of the change
-                CreateRequest request = new CreateRequest(fileName, data);
-                request.run();
+                //CreateRequest request = new CreateRequest(fileName, data);
+                //request.run();
             }
             else if(command.equals(CMD_ADD_CLIENT)) {
                 String ip = sc.next();

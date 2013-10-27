@@ -1,5 +1,8 @@
 package Graphene;
 
+import com.tiemens.secretshare.engine.SecretShare;
+import crypto.EncryptUtil;
+
 import java.io.*;
 import java.math.BigInteger;
 import java.net.InetAddress;
@@ -28,8 +31,8 @@ public class IncomingRequestServer extends Thread {
 
         ServerSocket servSocket = null;
         Socket fromClientSocket = null;
-        BufferedWriter out = null;
-        BufferedReader br = null;
+        DataOutputStream out = null;
+        DataInputStream in = null;
 
         try {
             servSocket = new ServerSocket(PORT);
@@ -39,39 +42,42 @@ public class IncomingRequestServer extends Thread {
             while(isRunning) {
                 fromClientSocket = servSocket.accept();
 
-                out = new BufferedWriter(new OutputStreamWriter(fromClientSocket.getOutputStream()));
-                br = new BufferedReader(new InputStreamReader(fromClientSocket.getInputStream()));
+                out = new DataOutputStream(fromClientSocket.getOutputStream());
+                in = new DataInputStream(fromClientSocket.getInputStream());
 
-                while ((str = br.readLine()) != null) {
-                    Scanner sc = new Scanner(str);
-                    String command = sc.next();
-                    String clientIp = fromClientSocket.getInetAddress().toString().replace("/", "");
+                String command = in.readUTF();
+                String clientIp = fromClientSocket.getInetAddress().toString().replace("/", "");
 
-                    if(command.equals("decrypt"))
-                    {
-                        String fileName = sc.next();
+                if(command.equals("decrypt"))
+                {
+                    String fileName = in.readUTF();
 
-                        System.out.println("Sending decryption share for file " + fileName);
+                    System.out.println("Sending decryption share for file " + fileName);
 
-                        //byte[] payload = RSA.encrypt_outgoing(clientIp, data);
-                        out.write(DataStore.Shares.get(fileName));
-                    }
-                    else if (command.equals(("create")))
-                    {
-                        String fileName = sc.next();
+                    //byte[] payload = RSA.encrypt_outgoing(clientIp, data);
+                    SecretShare.ShareInfo info = DataStore.Shares.get(fileName);
+                    byte[] share = EncryptUtil.shareToByteArray(info);
+                    out.writeInt(share.length);
+                    out.write(share);
+                }
+                else if (command.equals(("create")))
+                {
+                    String fileName = in.readUTF();
 
-                        String data = sc.next();
-                        String share = sc.next();
-                        //byte[] actualdata = RSA.decrypt_incoming(clientIp, data);
+                    int dataLen = in.readInt();
+                    byte[] data = new byte[dataLen];
+                    in.read(data, 0, dataLen);
 
-                        //DataStore.create(fileName, data);
-                    }
-                    else if (command.equals(("distrust")))
-                    {
+                    int shareLen = in.readInt();
+                    byte[] share = new byte[shareLen];
+                    in.read(share, 0, shareLen);
+                    //byte[] actualdata = RSA.decrypt_incoming(clientIp, data);
 
-                    }
+                    DataStore.create(fileName, data);
+                }
+                else if (command.equals(("distrust")))
+                {
 
-                    System.out.println("The message: " + str);
                 }
             }
         } catch (IOException e) {
@@ -79,15 +85,7 @@ public class IncomingRequestServer extends Thread {
         } catch (Exception e) {
 			// TODO Auto-generated catch block //RSA key stuff
 			e.printStackTrace();
-		} finally {
-            out.close();
-            try {
-                br.close();
-                fromClientSocket.close();
-            } catch (IOException e) {
-                e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-            }
-        }
+		}
     }
 
 }

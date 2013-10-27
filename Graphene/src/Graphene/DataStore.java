@@ -41,6 +41,27 @@ public class DataStore {
         }
     }
 
+    public static void create(String fileName, byte[] data) {
+        System.out.println("Getting encrypted file: " + fileName);
+
+        FileOutputStream out = null;
+
+        try {
+            out = new FileOutputStream(FILE_PATH.toString() + "/" + fileName + ".txt");
+            out.write(data);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        } catch (IOException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        } finally {
+            try {
+                out.close();
+            } catch (IOException e) {
+                e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            }
+        }
+    }
+
     public static EncryptedData encrypt(String fileName)
     {
         System.out.println("Encrypting file " + fileName);
@@ -84,7 +105,7 @@ public class DataStore {
 
     public static void delete(String fileName)
     {
-        Path file = Paths.get(getFileContents(fileName));
+        Path file = getFilePath(fileName);
 
         try {
             Files.delete(file);

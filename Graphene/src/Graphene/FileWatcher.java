@@ -41,7 +41,7 @@ public class FileWatcher extends Thread {
                         EncryptedData data = DataStore.encrypt(fileName);
 
                         // Let other nodes know of the change
-                        CreateRequest request = new CreateRequest(fileName, DataStore.getFileAsString(fileName), data.secretShare);
+                        CreateRequest request = new CreateRequest(fileName, DataStore.getFileContents(fileName), data.secretShare);
                         request.run();
                     }
                     else if(event.kind() == StandardWatchEventKinds.ENTRY_MODIFY) {
