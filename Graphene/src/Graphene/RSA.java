@@ -22,10 +22,10 @@ public class RSA {
 	private static PrivateKey privateKey;
 	private static PublicKey publicKey;
 	public static enum KeyType {PUBLIC, PRIVATE};
-	
+	private static final String ALGORITHM = "RSA/ECB/PKCS1Padding";
 	
 	private static void generateKeys() throws Exception{
-		final KeyPairGenerator keyGen = KeyPairGenerator.getInstance("RSA");
+		final KeyPairGenerator keyGen = KeyPairGenerator.getInstance(ALGORITHM);
 		keyGen.initialize(2048);
 		final KeyPair key = keyGen.generateKeyPair();
 		File privateKeyFile = new File(Main.RSA_PRIVATE_KEY_FILE);
@@ -63,7 +63,7 @@ public class RSA {
 	
 	public static byte[] encrypt(String text, Key key) throws Exception{
 		byte[] cipherText;
-		final Cipher cipher = Cipher.getInstance("RSA");
+		final Cipher cipher = Cipher.getInstance(ALGORITHM);
 		cipher.init(Cipher.ENCRYPT_MODE, key);
 		cipherText = cipher.doFinal(text.getBytes());
 		return cipherText;
@@ -72,7 +72,7 @@ public class RSA {
 	
 	public static byte[] encrypt(byte[] text, Key key) throws Exception{
 		byte[] cipherText;
-		final Cipher cipher = Cipher.getInstance("RSA");
+		final Cipher cipher = Cipher.getInstance(ALGORITHM);
 		cipher.init(Cipher.ENCRYPT_MODE, key);
 		cipherText = cipher.doFinal(text);
 		return cipherText;
@@ -81,7 +81,7 @@ public class RSA {
 	
 	public static String decrypt(byte[] text, Key key) throws Exception{
 		byte[] decrypted;
-		final Cipher cipher = Cipher.getInstance("RSA");
+		final Cipher cipher = Cipher.getInstance(ALGORITHM);
 		cipher.init(Cipher.DECRYPT_MODE, key);
 		decrypted = cipher.doFinal(text);
 		return new String(decrypted);
@@ -90,7 +90,7 @@ public class RSA {
 	
 	public static String decrypt(String text, Key key) throws Exception{
 		byte[] decrypted;
-		final Cipher cipher = Cipher.getInstance("RSA");
+		final Cipher cipher = Cipher.getInstance(ALGORITHM);
 		cipher.init(Cipher.DECRYPT_MODE, key);
 		decrypted = cipher.doFinal(text.getBytes());
 		return new String(decrypted);
@@ -133,7 +133,7 @@ public class RSA {
 		Base64 base64 = new Base64();
 		byte[] encodedKey = base64.decode(str);
 		X509EncodedKeySpec spec = new X509EncodedKeySpec(encodedKey);
-		KeyFactory kf = KeyFactory.getInstance("RSA");
+		KeyFactory kf = KeyFactory.getInstance(ALGORITHM);
 		if (keyType == keyType.PRIVATE)
 			return kf.generatePrivate(spec);
 		if (keyType == keyType.PUBLIC)
@@ -145,18 +145,26 @@ public class RSA {
 	public static byte[] encrypt_outgoing(String clientIp, String data) throws Exception{
 		// returns Client.Pubkey.Encrypt(data)
 		// We are Server
-		String clientPubkeyStr = RSAPubKeyClient.RSAPubKeyClient(clientIp);
-        PublicKey clientPubkey = (PublicKey) stringToKey(clientPubkeyStr, KeyType.PUBLIC);
-        byte[] encrypted_data = encrypt(data, clientPubkey);
-		return encrypted_data;
+		
+		//testing working:
+		return data.getBytes();
+		
+//		String clientPubkeyStr = RSAPubKeyClient.RSAPubKeyClient(clientIp);
+//        PublicKey clientPubkey = (PublicKey) stringToKey(clientPubkeyStr, KeyType.PUBLIC);
+//        byte[] encrypted_data = encrypt(data, clientPubkey);
+//		return encrypted_data;
 	}
 	
 	
 	public static String decrypt_incoming(String serverIP, byte[] data) throws Exception{
 		// returns Client.Privkey.Decrypt(data)
 		// We are Client
-		PrivateKey clientPrivKey = getPrivateKey();
-		String decrypted_data = decrypt(data, clientPrivKey);
-		return decrypted_data;
+		
+		//testing working:
+		return new String (data, "UTF-8");
+		
+//		PrivateKey clientPrivKey = getPrivateKey();
+//		String decrypted_data = decrypt(data, clientPrivKey);
+//		return decrypted_data;
 	}
 }
