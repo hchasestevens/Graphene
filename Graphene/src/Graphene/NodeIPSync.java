@@ -58,12 +58,15 @@ public class NodeIPSync {
     public static String[] GetIps()
     {
         String[] nodes = getValue(NODES_KEY).split(" ");
-        String[] ips = new String[nodes.length];
+
+        ArrayList<String> ipList = new ArrayList<String>();
 
         for(int i = 0; i < nodes.length; i++) {
-            if(nodes[i].isEmpty()) continue;
-            ips[i] = getValue(nodes[i]);
+            if(!nodes[i].isEmpty()) ipList.add(nodes[i]);
         }
+
+        String[] ips = new String[ipList.size()];
+        ipList.toArray(ips);
 
         return ips;
     }
