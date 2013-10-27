@@ -41,6 +41,10 @@ public class DataStore {
         }
     }
 
+    public static boolean hasFile(String fileName) {
+        return Shares.containsKey(fileName);
+    }
+
     public static void create(String fileName, byte[] data) {
         System.out.println("Getting encrypted file: " + fileName);
 

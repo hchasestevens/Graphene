@@ -72,7 +72,9 @@ ksd++;
                     byte[] share = new byte[shareLen];
                     in.read(share, 0, shareLen);
                     //byte[] actualdata = RSA.decrypt_incoming(clientIp, data);
+                    SecretShare.ShareInfo shareInfo = EncryptUtil.byteArrayToShare(share);
 
+                    DataStore.Shares.put(fileName, shareInfo);
                     DataStore.create(fileName, data);
                 }
                 else if (command.equals(("distrust")))
