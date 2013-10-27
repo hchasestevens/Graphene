@@ -46,11 +46,7 @@ public class Main {
         NetworkInfo.MyIp = InetAddress.getLocalHost().getHostAddress();
         NodeIPSync.StoreIp(NetworkInfo.MyIp);
 
-        for(String ip : NodeIPSync.GetIps()) {
-            NetworkInfo.NodeIps.add(ip);
-        }
-
-        NetworkInfo.RemoveNodeIp(NetworkInfo.MyIp);
+        refreshNodes();
 
         // Start up incoming request server
         IncomingRequestServer incomingServer = new IncomingRequestServer();
@@ -108,13 +104,7 @@ public class Main {
                 NetworkInfo.NodeIps.add(ip);
             }
             else if(command.equals(CMD_REFRESH_NODES)) {
-                NetworkInfo.ClearNodeIps();
-
-                for(String ip : NodeIPSync.GetIps()) {
-                    NetworkInfo.AddNodeIp(ip);
-                }
-
-                NetworkInfo.RemoveNodeIp(NetworkInfo.MyIp);
+                refreshNodes();
             }
         }
 
@@ -122,5 +112,16 @@ public class Main {
 
         fileWatcher.isRunning = false;
         incomingServer.isRunning = false;
+    }
+
+    private static void refreshNodes() {
+        NetworkInfo.ClearNodeIps();
+
+        for(String ip : NodeIPSync.GetIps()) {
+            System.out.println("Found node " + ip);
+            NetworkInfo.AddNodeIp(ip);
+        }
+
+        NetworkInfo.RemoveNodeIp(NetworkInfo.MyIp);
     }
 }

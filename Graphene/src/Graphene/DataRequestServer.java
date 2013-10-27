@@ -35,7 +35,7 @@ public class DataRequestServer extends Thread {
 
             System.out.println("Requesting decryption of " + this.resource_id + " from " + this.server_ip);
 
-			out.println("decrypt " + NetworkInfo.MyIp + " " + this.resource_id);
+			out.println("decrypt " + this.resource_id);
 
 			String str;
 			while ((str = in_buffer.readLine()) != null) {
