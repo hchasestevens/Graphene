@@ -5,5 +5,6 @@
 	<classpathentry kind="lib" path="C:/Users/Chase Stevens/Documents/GitHub/Graphene/Graphene/lib/commons-codec-1.8.jar"/>
 	<classpathentry kind="lib" path="lib/commons-lang3-3.1.jar"/>
 	<classpathentry kind="lib" path="lib/secretshare-v1.1.jar"/>
+	<classpathentry kind="lib" path="lib/commons-codec-1.8.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

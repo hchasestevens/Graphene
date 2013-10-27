@@ -66,8 +66,8 @@ public class IncomingRequestServer extends Thread {
 
                     int dataLen = in.readInt();
                     byte[] data = new byte[dataLen];
-                    in.read(data, 0, dataLen);
-
+                    int ksd = in.read(data, 0, dataLen);
+ksd++;
                     int shareLen = in.readInt();
                     byte[] share = new byte[shareLen];
                     in.read(share, 0, shareLen);

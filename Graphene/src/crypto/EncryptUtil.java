@@ -85,7 +85,7 @@ public class EncryptUtil {
     public static byte[] shareToByteArray(ShareInfo share) throws IOException {
         byte[] shareByteArray;
         try (ByteArrayOutputStream bos = new ByteArrayOutputStream(); ObjectOutput out = new ObjectOutputStream(bos)) {
-            out.writeObject(share);
+            out.writeObject(new SerializableShare(share));
             shareByteArray = bos.toByteArray();
         }
         return shareByteArray;
@@ -94,7 +94,7 @@ public class EncryptUtil {
     public static ShareInfo byteArrayToShare(byte[] byteArray) throws IOException, ClassNotFoundException {
         ShareInfo share;
         try (ByteArrayInputStream bis = new ByteArrayInputStream(byteArray); ObjectInput in = new ObjectInputStream(bis)) {
-            share = (ShareInfo) in.readObject();
+            share = ((SerializableShare) in.readObject()).getShareInfo();
         }
         return share;
     }
