@@ -62,7 +62,7 @@ public class NodeIPSync {
         ArrayList<String> ipList = new ArrayList<String>();
 
         for(int i = 0; i < nodes.length; i++) {
-            if(!nodes[i].isEmpty()) ipList.add(nodes[i]);
+            if(!nodes[i].isEmpty()) ipList.add(getValue(nodes[i]));
         }
 
         String[] ips = new String[ipList.size()];
