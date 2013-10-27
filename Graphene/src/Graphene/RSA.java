@@ -23,6 +23,7 @@ public class RSA {
 	private static PublicKey publicKey;
 	public static enum KeyType {PUBLIC, PRIVATE};
 	private static final String ALGORITHM = "RSA/ECB/PKCS1Padding";
+	private final static boolean RSA_ENABLED = false;
 	
 	private static void generateKeys() throws Exception{
 		final KeyPairGenerator keyGen = KeyPairGenerator.getInstance(ALGORITHM);
@@ -147,12 +148,13 @@ public class RSA {
 		// We are Server
 		
 		//testing working:
-		return data.getBytes();
+		if (!RSA_ENABLED)
+			return data.getBytes();
 		
-//		String clientPubkeyStr = RSAPubKeyClient.RSAPubKeyClient(clientIp);
-//        PublicKey clientPubkey = (PublicKey) stringToKey(clientPubkeyStr, KeyType.PUBLIC);
-//        byte[] encrypted_data = encrypt(data, clientPubkey);
-//		return encrypted_data;
+		String clientPubkeyStr = RSAPubKeyClient.RSAPubKeyClient(clientIp);
+        PublicKey clientPubkey = (PublicKey) stringToKey(clientPubkeyStr, KeyType.PUBLIC);
+        byte[] encrypted_data = encrypt(data, clientPubkey);
+		return encrypted_data;
 	}
 	
 	
@@ -160,12 +162,12 @@ public class RSA {
 		// returns Client.Privkey.Decrypt(data)
 		// We are Client
 		
-		//testing working:
+		if (!RSA_ENABLED){
 		System.out.println("Using UTF-8");
-		return new String (data, "UTF-8");
+		return new String (data, "UTF-8");}
 		
-//		PrivateKey clientPrivKey = getPrivateKey();
-//		String decrypted_data = decrypt(data, clientPrivKey);
-//		return decrypted_data;
+		PrivateKey clientPrivKey = getPrivateKey();
+		String decrypted_data = decrypt(data, clientPrivKey);
+		return decrypted_data;
 	}
 }
