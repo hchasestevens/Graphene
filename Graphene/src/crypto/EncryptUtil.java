@@ -6,16 +6,12 @@ package crypto;
 
 import com.tiemens.secretshare.engine.SecretShare;
 import com.tiemens.secretshare.engine.SecretShare.ShareInfo;
-import com.tiemens.secretshare.math.BigIntUtilities;
 import java.math.BigInteger;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
-import java.security.spec.KeySpec;
 import java.util.Arrays;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
