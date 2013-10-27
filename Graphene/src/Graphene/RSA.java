@@ -154,11 +154,10 @@ public class RSA {
 	
 	
 	public static String decrypt_incoming(String serverIP, String data) throws Exception{
-		// returns Server.Pubkey.Decrypt()
+		// returns Client.Privkey.Decrypt(data)
 		// We are Client
-		String serverPubkeyStr = RSAPubKeyClient.RSAPubKeyClient(serverIP);
-		PublicKey serverPubkey = (PublicKey) stringToKey(serverPubkeyStr, KeyType.PUBLIC);
-		String decrypted_data = decrypt(data, serverPubkey);
+		PrivateKey clientPrivKey = getPrivateKey();
+		String decrypted_data = decrypt(data, clientPrivKey);
 		return decrypted_data;
 	}
 }
