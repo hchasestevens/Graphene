@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.InetAddress;
+import java.nio.file.*;
 import java.util.Scanner;
 
 import org.apache.commons.codec.binary.Base64;
@@ -24,6 +25,8 @@ public class Main {
     private static final String CMD_ADD_CLIENT = "client";
     private static final String CMD_ADD_CLIENT_HELP = CMD_ADD_CLIENT + " - add a client, format: client <ip>";
 
+    private static final String PARAM_RESET = "-r";
+
     private static final String HELP_TEXT =
             CMD_HELP_HELP + System.lineSeparator() +
             CMD_QUIT_HELP + System.lineSeparator() +
@@ -33,11 +36,17 @@ public class Main {
     public static final String RSA_PUBLIC_KEY_FILE = ".public.key";
 
     public static void main(String[] args) throws IOException {
-        String line = "";
+        if(args.length > 0 && args[0].equals(PARAM_RESET)) {
+            NodeIPSync.reset();
+        }
 
+        // Init node network data
         NetworkInfo.MyIp = InetAddress.getLocalHost().getHostAddress();
+        NodeIPSync.StoreIp(NetworkInfo.MyIp);
 
-        NetworkInfo.NodeIps.add("172.20.128.33");
+        for(String ip : NodeIPSync.GetIps()) {
+            NetworkInfo.NodeIps.add(ip);
+        }
 
         // Start up incoming request server
         IncomingRequestServer incomingServer = new IncomingRequestServer();
@@ -52,8 +61,15 @@ public class Main {
 			System.out.println("Failed to start public key server!!!");
 		}
 
-        //  open up standard input
+        // Start up folder change watcher
+        Path dataFolder = Paths.get("files");
+        if(!Files.exists(dataFolder)) Files.createDirectory(dataFolder);
+        FileWatcher fileWatcher = new FileWatcher(dataFolder);
+        fileWatcher.start();
+
+        // Open up standard input
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        String line = "";
 
         while(!line.equals(CMD_QUIT)) {
             line = br.readLine();
@@ -89,6 +105,9 @@ public class Main {
             }
         }
 
+        NodeIPSync.RemoveIp();
+
+        fileWatcher.isRunning = false;
         incomingServer.isRunning = false;
     }
 }
