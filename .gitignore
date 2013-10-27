@@ -221,3 +221,7 @@ pip-log.txt
 #VS2013
 *.pyproj
 *.pyc
+
+#pub/priv keys
+.public.key
+.private.key

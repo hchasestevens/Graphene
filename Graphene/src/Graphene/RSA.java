@@ -143,7 +143,7 @@ public class RSA {
 	public static String encrypt_outgoing(String clientIp, String data) throws Exception{
 		// returns Client.Pubkey.Encrypt(Server.Privkey.Encrypt(data))
 		// We are Server
-		String clientPubkeyStr = RSAPubKeyClient.RSAPubKeyClient(clientIp.toString());
+		String clientPubkeyStr = RSAPubKeyClient.RSAPubKeyClient(clientIp);
         PublicKey clientPubkey = (PublicKey) stringToKey(clientPubkeyStr, KeyType.PUBLIC);
         PrivateKey serverPrivkey = getPrivateKey();
         byte[] encrypted_data = encrypt(encrypt(data, serverPrivkey), clientPubkey);
