@@ -44,9 +44,9 @@ public class CreateRequest {
 
             socket.close();
         } catch (UnknownHostException e) {
-            System.out.println("Creation: " + e.getMessage());
+            System.out.println("Unknown Host: " + e.getMessage());
         } catch (IOException e) {
-            System.out.println("Creation: " + e.getMessage());
+            System.out.println("IOProblem: " + e.getMessage());
         } catch (Exception e) {
 			// TODO Auto-generated catch block //RSA bullshit
 			e.printStackTrace();
