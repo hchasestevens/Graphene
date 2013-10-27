@@ -6,6 +6,13 @@ package crypto;
 
 import com.tiemens.secretshare.engine.SecretShare;
 import com.tiemens.secretshare.engine.SecretShare.ShareInfo;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectInput;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutput;
+import java.io.ObjectOutputStream;
 import java.math.BigInteger;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
@@ -33,7 +40,7 @@ public class EncryptUtil {
         KeyGenerator kgen = KeyGenerator.getInstance("AES");
         kgen.init(128);
         SecretKey key = kgen.generateKey();
-        
+
         Cipher c = Cipher.getInstance("AES/CBC/PKCS5Padding");
         c.init(Cipher.ENCRYPT_MODE, key);
         byte[] iv = c.getIV();
@@ -44,25 +51,25 @@ public class EncryptUtil {
         }
         byte[] encrypted = c.doFinal(dataArray);
         BigInteger keyAndIv = new BigInteger(ArrayUtils.addAll(iv, key.getEncoded()));
-        
+
         SecretShare.PublicInfo publicInfo = new SecretShare.PublicInfo(3, 2, SecretShare.createAppropriateModulusForSecret(keyAndIv), "");
-        
+
         SecretShare secretShare = new SecretShare(publicInfo);
         SecretShare.SplitSecretOutput sso = secretShare.split(keyAndIv);
         List<ShareInfo> lsi = sso.getShareInfos();
-        
+
         EncryptedData fd = new EncryptedData();
         fd.encryptedData = encrypted;
         fd.secretShare = lsi;
-        
+
         return fd;
-        
+
     }
-    
+
     public static String decrypt(EncryptedData encryptedData) throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException, InvalidAlgorithmParameterException {
         SecretShare secretShare = new SecretShare(encryptedData.secretShare.get(0).getPublicInfo());
         BigInteger combined = secretShare.combineParanoid(encryptedData.secretShare, null, null);
-        
+
         byte[] combinedBytes = combined.toByteArray();
         if (combinedBytes.length > 32) {
             combinedBytes = Arrays.copyOfRange(combinedBytes, 1, 33);
@@ -71,7 +78,24 @@ public class EncryptUtil {
         Cipher c = Cipher.getInstance("AES/CBC/PKCS5Padding");
         c.init(Cipher.DECRYPT_MODE, key, new IvParameterSpec(Arrays.copyOfRange(combinedBytes, 0, 16)));
         byte[] decrypted = c.doFinal(encryptedData.encryptedData);
-        
+
         return new String(decrypted);
+    }
+
+    public static byte[] shareToByteArray(ShareInfo share) throws IOException {
+        byte[] shareByteArray;
+        try (ByteArrayOutputStream bos = new ByteArrayOutputStream(); ObjectOutput out = new ObjectOutputStream(bos)) {
+            out.writeObject(share);
+            shareByteArray = bos.toByteArray();
+        }
+        return shareByteArray;
+    }
+
+    public static ShareInfo byteArrayToShare(byte[] byteArray) throws IOException, ClassNotFoundException {
+        ShareInfo share;
+        try (ByteArrayInputStream bis = new ByteArrayInputStream(byteArray); ObjectInput in = new ObjectInputStream(bis)) {
+            share = (ShareInfo) in.readObject();
+        }
+        return share;
     }
 }
