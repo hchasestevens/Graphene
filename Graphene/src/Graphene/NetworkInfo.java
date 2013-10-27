@@ -16,4 +16,22 @@ public class NetworkInfo {
     public static ArrayList<String> NodeIps = new ArrayList<String>();
     
     public static HashMap<String, String> pubkeyCache = new HashMap<String, String>();
+
+    public static void ClearNodeIps() {
+        synchronized (NodeIps) {
+            NodeIps.clear();
+        }
+    }
+
+    public static void AddNodeIp(String ip) {
+        synchronized (NodeIps) {
+            NodeIps.add(ip);
+        }
+    }
+
+    public static void RemoveNodeIp(String ip) {
+        synchronized (NodeIps) {
+            NodeIps.remove(ip);
+        }
+    }
 }

@@ -25,6 +25,8 @@ public class Main {
     private static final String CMD_ADD_CLIENT = "client";
     private static final String CMD_ADD_CLIENT_HELP = CMD_ADD_CLIENT + " - add a client, format: client <ip>";
 
+    private static final String CMD_REFRESH_NODES = "refresh";
+
     private static final String PARAM_RESET = "-r";
 
     private static final String HELP_TEXT =
@@ -47,6 +49,8 @@ public class Main {
         for(String ip : NodeIPSync.GetIps()) {
             NetworkInfo.NodeIps.add(ip);
         }
+
+        NetworkInfo.RemoveNodeIp(NetworkInfo.MyIp);
 
         // Start up incoming request server
         IncomingRequestServer incomingServer = new IncomingRequestServer();
@@ -102,6 +106,15 @@ public class Main {
             else if(command.equals(CMD_ADD_CLIENT)) {
                 String ip = sc.next();
                 NetworkInfo.NodeIps.add(ip);
+            }
+            else if(command.equals(CMD_REFRESH_NODES)) {
+                NetworkInfo.ClearNodeIps();
+
+                for(String ip : NodeIPSync.GetIps()) {
+                    NetworkInfo.AddNodeIp(ip);
+                }
+
+                NetworkInfo.RemoveNodeIp(NetworkInfo.MyIp);
             }
         }
 

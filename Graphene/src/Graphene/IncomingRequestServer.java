@@ -51,10 +51,11 @@ public class IncomingRequestServer extends Thread {
 
                         System.out.println("Decrypting file " + fileName);
 
-                        EncryptedFile file = DataStore.getFile(fileName);
-                        BigInteger partialDecryption = file.partialDecryption();
-                        String data = partialDecryption.toString();
-                        
+                        //EncryptedFile file = DataStore.getFile(fileName);
+                        //BigInteger partialDecryption = file.partialDecryption();
+                        //String data = partialDecryption.toString();
+                        String data = "bullshit";
+
                         String payload = RSA.encrypt_outgoing(clientIp, data);
                         
                         pw.println(payload);

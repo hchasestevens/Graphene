@@ -26,7 +26,7 @@ public class NodeIPSync {
     private static UUID ourId = UUID.randomUUID();
 
     public static void reset() {
-        storeValue(NODES_KEY, "");
+        storeValue(NODES_KEY, " ");
     }
 
     public static void StoreIp(String ip)
