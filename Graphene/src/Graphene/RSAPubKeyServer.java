@@ -21,23 +21,29 @@ public class RSAPubKeyServer extends Thread {
 	
 	
 	public void run(){
+        Socket fromClientSocket = null;
+        PrintWriter pw = null;
+
 		try {
             ServerSocket servSocket = new ServerSocket(PORT);
 
             System.out.println("Setting up incoming RSA Pubkey server on port " + PORT);
 
             while(this.isRunning) {
-                Socket fromClientSocket = servSocket.accept();
+                fromClientSocket = servSocket.accept();
+                pw = new PrintWriter(fromClientSocket.getOutputStream(), true);
 
-                PrintWriter pw = new PrintWriter(fromClientSocket.getOutputStream(), true);
-				
 				pw.print(this.RSAPubKey);
-                pw.close();
-
-                fromClientSocket.close();
             }
         } catch (IOException e) {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        } finally {
+            pw.close();
+            try {
+                fromClientSocket.close();
+            } catch (IOException e) {
+                e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            }
         }
 	}
 

@@ -17,30 +17,36 @@ public class RSAPubKeyClient {
 		if (cache.containsKey(ip)){
 			return cache.get(ip);
 		}
+
+        String str = null;
+
+        Socket socket = null;
+        PrintWriter out = null;
+        BufferedReader in_buffer = null;
 		
 		try {
-			Socket socket = new Socket(ip,
+			socket = new Socket(ip,
 					RSAPubKeyServer.PORT);
-			PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
-			BufferedReader in_buffer = new BufferedReader(
+			out = new PrintWriter(socket.getOutputStream(), true);
+			in_buffer = new BufferedReader(
 					new InputStreamReader(socket.getInputStream()));
 
             System.out.println("Requesting pubkey from " + ip);
 
-			String str = in_buffer.readLine();
-            out.close();
-            socket.close();
-            in_buffer.close();
+			str = in_buffer.readLine();
             
             cache.put(ip, str);
-            
-			return str;
-
 		} catch (UnknownHostException e) {
 			throw e;
 		} catch (IOException e) {
             throw e;
-		}
+		} finally {
+            out.close();
+            in_buffer.close();
+            socket.close();
+        }
+
+        return str;
 	}
 
 }

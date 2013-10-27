@@ -32,17 +32,18 @@ public class CreateRequest {
     }
 
     private void notifyServer(String serverIp) {
+        Socket socket = null;
+        PrintWriter out = null;
+
         try {
-            Socket socket = new Socket(serverIp, IncomingRequestServer.PORT);
-            PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
+            socket = new Socket(serverIp, IncomingRequestServer.PORT);
+            out = new PrintWriter(socket.getOutputStream(), true);
 
             System.out.println("Requesting creation of file " + this.fileName + " to " + serverIp);
             
             this.data = RSA.encrypt_outgoing(serverIp, this.data);
 
             out.println("create " + this.fileName + " " + this.data);
-
-            socket.close();
         } catch (UnknownHostException e) {
             System.out.println("Unknown Host: " + e.getMessage());
         } catch (IOException e) {
@@ -51,5 +52,13 @@ public class CreateRequest {
 			// TODO Auto-generated catch block //RSA bullshit
 			e.printStackTrace();
 		}
+        finally {
+            out.close();
+            try {
+                socket.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 }
