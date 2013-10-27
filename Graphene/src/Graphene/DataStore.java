@@ -47,7 +47,7 @@ public class DataStore {
         FileOutputStream out = null;
 
         try {
-            out = new FileOutputStream(FILE_PATH.toString() + "/" + fileName + ".txt");
+            out = new FileOutputStream(FILE_PATH.toString() + "/" + fileName);
             out.write(data);
         } catch (FileNotFoundException e) {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
@@ -76,7 +76,7 @@ public class DataStore {
 
             Shares.put(fileName, data.secretShare.get(0));
 
-            out = new FileOutputStream(FILE_PATH.toString() + "/" + fileName + ".txt");
+            out = new FileOutputStream(FILE_PATH.toString() + "/" + fileName);
             out.write(data.encryptedData);
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
@@ -133,6 +133,6 @@ public class DataStore {
     }
 
     private static Path getFilePath(String fileName) {
-        return Paths.get(FILE_PATH.toString(), fileName + ".txt");
+        return Paths.get(FILE_PATH.toString(), fileName);
     }
 }
