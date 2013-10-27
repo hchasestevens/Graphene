@@ -43,7 +43,7 @@ public class Main {
         }
 
         // Init node network data
-        NetworkInfo.MyIp = InetAddress.getLocalHost().getHostAddress();
+        NetworkInfo.MyIp = InetAddress.getByName("localhost").getHostAddress();
         NodeIPSync.StoreIp(NetworkInfo.MyIp);
 
         refreshNodes();
