@@ -28,21 +28,25 @@ public class IncomingRequestServer extends Thread {
         String str;
 
         ServerSocket servSocket = null;
+        Socket fromClientSocket = null;
+        PrintWriter pw = null;
+        BufferedReader br = null;
+
         try {
             servSocket = new ServerSocket(PORT);
 
             System.out.println("Setting up incoming request server on port " + PORT);
 
             while(isRunning) {
-                Socket fromClientSocket = servSocket.accept();
+                fromClientSocket = servSocket.accept();
 
-                PrintWriter pw = new PrintWriter(fromClientSocket.getOutputStream(), true);
-                BufferedReader br = new BufferedReader(new InputStreamReader(fromClientSocket.getInputStream()));
+                pw = new PrintWriter(fromClientSocket.getOutputStream(), true);
+                br = new BufferedReader(new InputStreamReader(fromClientSocket.getInputStream()));
 
                 while ((str = br.readLine()) != null) {
                     Scanner sc = new Scanner(str);
                     String command = sc.next();
-                    String clientIp = fromClientSocket.getInetAddress().toString().replace("/","");
+                    String clientIp = fromClientSocket.getInetAddress().toString().replace("/", "");
 
                     if(command.equals("decrypt"))
                     {
@@ -77,18 +81,21 @@ public class IncomingRequestServer extends Thread {
 
                     System.out.println("The message: " + str);
                 }
-
-                pw.close();
-                br.close();
-
-                fromClientSocket.close();
             }
         } catch (IOException e) {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         } catch (Exception e) {
 			// TODO Auto-generated catch block //RSA key stuff
 			e.printStackTrace();
-		}
+		} finally {
+            pw.close();
+            try {
+                br.close();
+                fromClientSocket.close();
+            } catch (IOException e) {
+                e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            }
+        }
     }
 
 }

@@ -56,6 +56,14 @@ public class DataRequestServer extends Thread {
 		} catch (Exception e) {
 			// TODO Auto-generated catch block //RSA bullshit
 			e.printStackTrace();
-		}
+		} finally {
+            out.close();
+            try {
+                in_buffer.close();
+                socket.close();
+            } catch (IOException e) {
+                e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            }
+        }
 	}
 }
