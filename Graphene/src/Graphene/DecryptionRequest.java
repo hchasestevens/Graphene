@@ -27,14 +27,14 @@ public class DecryptionRequest {
     public DecryptionRequest(String fileName)
     {
         // Choose k random ip's
-        int k = 0;
+        int k = NetworkInfo.NodeIps.size();
 
         final EncryptedData data = new EncryptedData();
         data.encryptedData = DataStore.getFileContents(fileName);
         data.secretShare = new ArrayList<SecretShare.ShareInfo>();
 
         for(int i = 0; i < k; i++) {
-            (new DataRequestServer(NetworkInfo.NodeIps.get(0), fileName, new IDecryptionCallback() {
+            (new DataRequestServer(NetworkInfo.NodeIps.get(i), fileName, new IDecryptionCallback() {
                 public void DataReceived(SecretShare.ShareInfo share)
                 {
                     data.secretShare.add(share);
@@ -48,6 +48,8 @@ public class DecryptionRequest {
         }
 
         while(data.secretShare.size() != k) { }
+
+        data.secretShare.add(DataStore.Shares.get(fileName));
 
         try {
             String res = EncryptUtil.decrypt(data);
