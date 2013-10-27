@@ -26,7 +26,7 @@ public class RSA {
 	private final static boolean RSA_ENABLED = false;
 	
 	private static void generateKeys() throws Exception{
-		final KeyPairGenerator keyGen = KeyPairGenerator.getInstance(ALGORITHM);
+		final KeyPairGenerator keyGen = KeyPairGenerator.getInstance("RSA");
 		keyGen.initialize(2048);
 		final KeyPair key = keyGen.generateKeyPair();
 		File privateKeyFile = new File(Main.RSA_PRIVATE_KEY_FILE);
@@ -134,7 +134,7 @@ public class RSA {
 		Base64 base64 = new Base64();
 		byte[] encodedKey = base64.decode(str);
 		X509EncodedKeySpec spec = new X509EncodedKeySpec(encodedKey);
-		KeyFactory kf = KeyFactory.getInstance(ALGORITHM);
+		KeyFactory kf = KeyFactory.getInstance("RSA");
 		if (keyType == keyType.PRIVATE)
 			return kf.generatePrivate(spec);
 		if (keyType == keyType.PUBLIC)
