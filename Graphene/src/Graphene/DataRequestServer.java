@@ -1,5 +1,7 @@
 package Graphene;
 
+import com.tiemens.secretshare.engine.SecretShare;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -40,8 +42,8 @@ public class DataRequestServer extends Thread {
 			String str;
 			while ((str = in_buffer.readLine()) != null) {
 				if (!str.isEmpty()) {
-					str = RSA.decrypt_incoming(this.server_ip, str);
-					callback.DataReceived(new BigInteger(str)); //TODO: Change this from BigInteger
+					//str = RSA.decrypt_incoming(this.server_ip, str);
+					callback.DataReceived(new SecretShare.ShareInfo(str));
 					break;
 				}
 			}

@@ -1,5 +1,7 @@
 package Graphene;
 
+import com.tiemens.secretshare.engine.SecretShare;
+
 import java.math.BigInteger;
 
 /**
@@ -10,6 +12,6 @@ import java.math.BigInteger;
  * To change this template use File | Settings | File Templates.
  */
 public interface IDecryptionCallback {
-    public void DataReceived(BigInteger data);
+    public void DataReceived(SecretShare.ShareInfo share);
     public void OnError(String message);
 }

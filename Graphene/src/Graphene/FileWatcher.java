@@ -1,5 +1,7 @@
 package Graphene;
 
+import crypto.EncryptedData;
+
 import java.io.IOException;
 import java.nio.file.*;
 
@@ -36,10 +38,10 @@ public class FileWatcher extends Thread {
                     if(event.kind() == StandardWatchEventKinds.ENTRY_CREATE) {
                         String fileName = event.context().toString();
 
-                        DataStore.encrypt(fileName);
+                        EncryptedData data = DataStore.encrypt(fileName);
 
                         // Let other nodes know of the change
-                        CreateRequest request = new CreateRequest(fileName, DataStore.getFileContents(fileName));
+                        CreateRequest request = new CreateRequest(fileName, DataStore.getFileAsString(fileName), data.secretShare);
                         request.run();
                     }
                     else if(event.kind() == StandardWatchEventKinds.ENTRY_MODIFY) {

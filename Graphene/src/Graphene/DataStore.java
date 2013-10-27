@@ -1,5 +1,6 @@
 package Graphene;
 
+import com.tiemens.secretshare.engine.SecretShare;
 import crypto.EncryptUtil;
 import crypto.EncryptedData;
 
@@ -17,6 +18,7 @@ import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.Dictionary;
+import java.util.HashMap;
 import java.util.Hashtable;
 
 /**
@@ -29,6 +31,8 @@ import java.util.Hashtable;
 public class DataStore {
     public static final Path FILE_PATH = Paths.get("files");
 
+    public static HashMap<String, SecretShare.ShareInfo> Shares = new HashMap<String, SecretShare.ShareInfo>();
+
     public static void init() {
         if(!Files.exists(FILE_PATH)) try {
             Files.createDirectory(FILE_PATH);
@@ -37,16 +41,19 @@ public class DataStore {
         }
     }
 
-    public static void encrypt(String fileName)
+    public static EncryptedData encrypt(String fileName)
     {
         System.out.println("Encrypting file " + fileName);
 
-        String contents = getFileContents(fileName);
+        String contents = getFileAsString(fileName);
 
         FileOutputStream out = null;
+        EncryptedData data = null;
 
         try {
-            EncryptedData data = EncryptUtil.encrypt(contents);
+            data = EncryptUtil.encrypt(contents);
+
+            Shares.put(fileName, data.secretShare.get(0));
 
             out = new FileOutputStream(FILE_PATH.toString() + "/" + fileName + ".txt");
             out.write(data.encryptedData);
@@ -71,6 +78,8 @@ public class DataStore {
                 e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
             }
         }
+
+        return data;
     }
 
     public static void delete(String fileName)
@@ -84,7 +93,7 @@ public class DataStore {
         }
     }
 
-    public static String getFileContents(String fileName)
+    public static byte[] getFileContents(String fileName)
     {
         byte[] encoded = new byte[0];
         try {
@@ -93,7 +102,13 @@ public class DataStore {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         }
 
-        return StandardCharsets.UTF_8.decode(ByteBuffer.wrap(encoded)).toString();
+        return encoded;
+    }
+
+    public static String getFileAsString(String fileName) {
+        byte[] file = getFileContents(fileName);
+        ByteBuffer buffer = ByteBuffer.wrap(file);
+        return StandardCharsets.UTF_8.decode(buffer).toString();
     }
 
     private static Path getFilePath(String fileName) {

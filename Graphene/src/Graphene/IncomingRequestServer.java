@@ -8,6 +8,7 @@ import java.net.Socket;
 import java.nio.charset.StandardCharsets;
 import java.security.PrivateKey;
 import java.security.PublicKey;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 /**
@@ -27,7 +28,7 @@ public class IncomingRequestServer extends Thread {
 
         ServerSocket servSocket = null;
         Socket fromClientSocket = null;
-        OutputStream out = null;
+        BufferedWriter out = null;
         BufferedReader br = null;
 
         try {
@@ -38,7 +39,7 @@ public class IncomingRequestServer extends Thread {
             while(isRunning) {
                 fromClientSocket = servSocket.accept();
 
-                out = fromClientSocket.getOutputStream();
+                out = new BufferedWriter(new OutputStreamWriter(fromClientSocket.getOutputStream()));
                 br = new BufferedReader(new InputStreamReader(fromClientSocket.getInputStream()));
 
                 while ((str = br.readLine()) != null) {
@@ -48,26 +49,20 @@ public class IncomingRequestServer extends Thread {
 
                     if(command.equals("decrypt"))
                     {
-                        //String returnIp = sc.next();
                         String fileName = sc.next();
 
-                        System.out.println("Decrypting file " + fileName);
+                        System.out.println("Sending decryption share for file " + fileName);
 
-                        //EncryptedFile file = DataStore.getFile(fileName);
-                        //BigInteger partialDecryption = file.partialDecryption();
-                        //String data = partialDecryption.toString();
-                        String data = "bullshit";
-
-                        byte[] payload = RSA.encrypt_outgoing(clientIp, data);
-                        out.write(payload);
+                        //byte[] payload = RSA.encrypt_outgoing(clientIp, data);
+                        out.write(DataStore.Shares.get(fileName));
                     }
                     else if (command.equals(("create")))
                     {
                         String fileName = sc.next();
+
                         String data = sc.next();
-                        //BigInteger sig = sc.nextBigInteger();
-                        
-                        byte[] actualdata = RSA.decrypt_incoming(clientIp, data);
+                        String share = sc.next();
+                        //byte[] actualdata = RSA.decrypt_incoming(clientIp, data);
 
                         //DataStore.create(fileName, data);
                     }
