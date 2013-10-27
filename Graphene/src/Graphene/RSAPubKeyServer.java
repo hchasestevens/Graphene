@@ -33,7 +33,7 @@ public class RSAPubKeyServer extends Thread {
                 fromClientSocket = servSocket.accept();
                 pw = new PrintWriter(fromClientSocket.getOutputStream(), true);
 
-				pw.print(this.RSAPubKey);
+				pw.println(this.RSAPubKey);
             }
         } catch (IOException e) {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.

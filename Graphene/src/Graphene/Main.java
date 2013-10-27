@@ -92,7 +92,7 @@ public class Main {
                 String data = sc.next();
 
                 // Create file in local node
-                DataStore.create(fileName, data);
+                //DataStore.create(fileName, data);
 
                 // Let other nodes know of the change
                 CreateRequest request = new CreateRequest(fileName, data);

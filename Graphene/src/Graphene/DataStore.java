@@ -1,5 +1,11 @@
 package Graphene;
 
+import crypto.EncryptUtil;
+import crypto.EncryptedData;
+
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
 import java.io.*;
 import java.math.BigInteger;
 import java.nio.ByteBuffer;
@@ -7,6 +13,9 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.security.InvalidAlgorithmParameterException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 import java.util.Dictionary;
 import java.util.Hashtable;
 
@@ -28,20 +37,39 @@ public class DataStore {
         }
     }
 
-    public static void create(String fileName, String file)
+    public static void encrypt(String fileName)
     {
-        System.out.println("Creating file " + fileName + " with data " + file);
+        System.out.println("Encrypting file " + fileName);
 
-        Writer writer = null;
+        String contents = getFileContents(fileName);
+
+        FileOutputStream out = null;
 
         try {
-            writer = new BufferedWriter(new OutputStreamWriter(
-                     new FileOutputStream(FILE_PATH.toString() + "/" + fileName + ".txt"), "utf-8"));
-            writer.write(file);
-        } catch (IOException ex){
-            // report
+            EncryptedData data = EncryptUtil.encrypt(contents);
+
+            out = new FileOutputStream(FILE_PATH.toString() + "/" + fileName + ".txt");
+            out.write(data.encryptedData);
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        } catch (NoSuchPaddingException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        } catch (InvalidKeyException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        } catch (IllegalBlockSizeException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        } catch (BadPaddingException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        } catch (InvalidAlgorithmParameterException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        } catch(IOException e) {
+            e.printStackTrace();
         } finally {
-            try { writer.close(); } catch (Exception ex) {}
+            try {
+                out.close();
+            } catch (IOException e) {
+                e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            }
         }
     }
 

@@ -34,7 +34,13 @@ public class FileWatcher extends Thread {
 
                 for (WatchEvent event : key.pollEvents()) {
                     if(event.kind() == StandardWatchEventKinds.ENTRY_CREATE) {
+                        String fileName = event.context().toString();
 
+                        DataStore.encrypt(fileName);
+
+                        // Let other nodes know of the change
+                        CreateRequest request = new CreateRequest(fileName, DataStore.getFileContents(fileName));
+                        request.run();
                     }
                     else if(event.kind() == StandardWatchEventKinds.ENTRY_MODIFY) {
 
