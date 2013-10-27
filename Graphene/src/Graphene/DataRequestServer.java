@@ -1,14 +1,14 @@
 package Graphene;
 
-import com.tiemens.secretshare.engine.SecretShare;
-
 import java.io.BufferedReader;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.PrintWriter;
-import java.math.BigInteger;
 import java.net.Socket;
 import java.net.UnknownHostException;
+
+import com.tiemens.secretshare.engine.SecretShare;
 
 public class DataRequestServer extends Thread {
 	private final String server_ip;
@@ -25,28 +25,29 @@ public class DataRequestServer extends Thread {
 	@Override
 	public void run() {
 		Socket socket = null;
-        PrintWriter out = null;
-        BufferedReader in_buffer = null;
+        DataOutputStream out = null;
+        DataInputStream in_buffer = null;
 
 		try {
 			socket = new Socket(this.server_ip,
 					IncomingRequestServer.PORT);
-			out = new PrintWriter(socket.getOutputStream(), true);
-			in_buffer = new BufferedReader(
-					new InputStreamReader(socket.getInputStream()));
+			out = new DataOutputStream(socket.getOutputStream());
+			in_buffer = new DataInputStream(socket.getInputStream());
 
             System.out.println("Requesting decryption of " + this.resource_id + " from " + this.server_ip);
 
-			out.println("decrypt " + this.resource_id);
-
-			String str;
-			while ((str = in_buffer.readLine()) != null) {
-				if (!str.isEmpty()) {
-					//str = RSA.decrypt_incoming(this.server_ip, str);
-					callback.DataReceived(new SecretShare.ShareInfo(str));
-					break;
-				}
+            out.writeUTF("decrypt");
+            out.writeUTF(this.resource_id);
+            
+			Integer bytelen = in_buffer.readInt();
+			byte[] data = new byte[bytelen];
+			byte incoming;
+			for (int i = 0; i < bytelen; i++){
+				data[i] = in_buffer.readByte();
 			}
+
+			callback.DataReceived(new SecretShare.ShareInfo(data));
+			
 		} catch (UnknownHostException e) {
 			this.callback.OnError(e.getMessage());
 		} catch (IOException e) {
