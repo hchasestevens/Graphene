@@ -37,6 +37,8 @@ public class CreateRequest {
             PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
 
             System.out.println("Requesting creation of file " + this.fileName + " to " + serverIp);
+            
+            this.data = RSA.encrypt_outgoing(serverIp, this.data);
 
             out.println("create " + this.fileName + " " + this.data);
 
@@ -45,6 +47,9 @@ public class CreateRequest {
             System.out.println("Creation: " + e.getMessage());
         } catch (IOException e) {
             System.out.println("Creation: " + e.getMessage());
-        }
+        } catch (Exception e) {
+			// TODO Auto-generated catch block //RSA bullshit
+			e.printStackTrace();
+		}
     }
 }

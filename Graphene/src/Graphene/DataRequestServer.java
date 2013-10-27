@@ -40,7 +40,8 @@ public class DataRequestServer extends Thread {
 			String str;
 			while ((str = in_buffer.readLine()) != null) {
 				if (!str.isEmpty()) {
-					callback.DataReceived(new BigInteger(str));
+					str = RSA.decrypt_incoming(this.server_ip, str);
+					callback.DataReceived(new BigInteger(str)); //TODO: Change this from BigInteger
 					break;
 				}
 			}
@@ -52,6 +53,9 @@ public class DataRequestServer extends Thread {
 			this.callback.OnError(e.getMessage());
 		} catch (IOException e) {
             this.callback.OnError(e.getMessage());
+		} catch (Exception e) {
+			// TODO Auto-generated catch block //RSA bullshit
+			e.printStackTrace();
 		}
 	}
 }

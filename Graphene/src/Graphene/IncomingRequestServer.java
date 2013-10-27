@@ -5,8 +5,11 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.math.BigInteger;
+import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.security.PrivateKey;
+import java.security.PublicKey;
 import java.util.Scanner;
 
 /**
@@ -39,6 +42,7 @@ public class IncomingRequestServer extends Thread {
                 while ((str = br.readLine()) != null) {
                     Scanner sc = new Scanner(str);
                     String command = sc.next();
+                    String clientIp = fromClientSocket.getInetAddress().toString();
 
                     if(command.equals("decrypt"))
                     {
@@ -49,13 +53,19 @@ public class IncomingRequestServer extends Thread {
 
                         EncryptedFile file = DataStore.getFile(fileName);
                         BigInteger partialDecryption = file.partialDecryption();
-                        pw.println(partialDecryption.toString());
+                        String data = partialDecryption.toString();
+                        
+                        String payload = RSA.encrypt_outgoing(clientIp, data);
+                        
+                        pw.println(payload);
                     }
                     else if (command.equals(("create")))
                     {
                         String fileName = sc.next();
                         String data = sc.next();
                         //BigInteger sig = sc.nextBigInteger();
+                        
+                        data = RSA.decrypt_incoming(clientIp, data);
 
                         DataStore.create(fileName, data);
                     }
@@ -74,7 +84,10 @@ public class IncomingRequestServer extends Thread {
             }
         } catch (IOException e) {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-        }
+        } catch (Exception e) {
+			// TODO Auto-generated catch block //RSA key stuff
+			e.printStackTrace();
+		}
     }
 
 }

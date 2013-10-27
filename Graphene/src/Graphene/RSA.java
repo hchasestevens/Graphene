@@ -4,6 +4,7 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.security.Key;
@@ -68,11 +69,29 @@ public class RSA {
 	}
 	
 	
+	public static byte[] encrypt(byte[] text, Key key) throws Exception{
+		byte[] cipherText;
+		final Cipher cipher = Cipher.getInstance("RSA");
+		cipher.init(Cipher.ENCRYPT_MODE, key);
+		cipherText = cipher.doFinal(text);
+		return cipherText;
+	}
+	
+	
 	public static String decrypt(byte[] text, Key key) throws Exception{
 		byte[] decrypted;
 		final Cipher cipher = Cipher.getInstance("RSA");
 		cipher.init(Cipher.DECRYPT_MODE, key);
 		decrypted = cipher.doFinal(text);
+		return new String(decrypted);
+	}
+	
+	
+	public static String decrypt(String text, Key key) throws Exception{
+		byte[] decrypted;
+		final Cipher cipher = Cipher.getInstance("RSA");
+		cipher.init(Cipher.DECRYPT_MODE, key);
+		decrypted = cipher.doFinal(text.getBytes());
 		return new String(decrypted);
 	}
 	
@@ -118,5 +137,28 @@ public class RSA {
 		if (keyType == keyType.PUBLIC)
 			return (PublicKey) inputStream.readObject();
 		throw new Exception("keyType must be PUBLIC or PRIVATE.");
+	}
+	
+	
+	public static String encrypt_outgoing(String clientIp, String data) throws Exception{
+		// returns Client.Pubkey.Encrypt(Server.Privkey.Encrypt(data))
+		// We are Server
+		String clientPubkeyStr = RSAPubKeyClient.RSAPubKeyClient(clientIp.toString());
+        PublicKey clientPubkey = (PublicKey) stringToKey(clientPubkeyStr, KeyType.PUBLIC);
+        PrivateKey serverPrivkey = getPrivateKey();
+        byte[] encrypted_data = encrypt(encrypt(data, serverPrivkey), clientPubkey);
+        String payload = new String(encrypted_data);
+		return payload;
+	}
+	
+	
+	public static String decrypt_incoming(String serverIP, String data) throws Exception{
+		// returns Server.Pubkey.Decrypt(Client.Privkey.Decrypt(data))
+		// We are Client
+		String serverPubkeyStr = RSAPubKeyClient.RSAPubKeyClient(serverIP);
+		PublicKey serverPubkey = (PublicKey) stringToKey(serverPubkeyStr, KeyType.PUBLIC);
+		PrivateKey clientPrivKey = getPrivateKey();
+		String decrypted_data = decrypt(decrypt(data, clientPrivKey), serverPubkey);
+		return decrypted_data;
 	}
 }
