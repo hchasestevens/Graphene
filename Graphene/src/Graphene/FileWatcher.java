@@ -44,7 +44,7 @@ public class FileWatcher extends Thread {
                         CreateRequest request = new CreateRequest(fileName, DataStore.getFileContents(fileName), data.secretShare);
                         request.run();
                     }
-                    else if(event.kind() == StandardWatchEventKinds.ENTRY_MODIFY) {
+                                    else if(event.kind() == StandardWatchEventKinds.ENTRY_MODIFY) {
 
                     }
                     else if(event.kind() == StandardWatchEventKinds.ENTRY_DELETE) {

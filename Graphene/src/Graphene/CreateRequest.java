@@ -59,9 +59,12 @@ public class CreateRequest {
             byte[] shareData = EncryptUtil.shareToByteArray(share);
             out.writeInt(shareData.length);
             out.write(shareData);
+
+            out.flush();
         } catch (UnknownHostException e) {
             System.out.println("Unknown Host: " + e.getMessage());
         } catch (IOException e) {
+            e.printStackTrace();
             System.out.println("IOProblem: " + e.getMessage());
         } catch (Exception e) {
 			// TODO Auto-generated catch block //RSA bullshit
