@@ -33,8 +33,12 @@ public class DecryptionRequest {
         data.encryptedData = DataStore.getFileContents(fileName);
         data.secretShare = new ArrayList<SecretShare.ShareInfo>();
 
+        DataRequestServer[] requests = new DataRequestServer[k];
+
+
+
         for(int i = 0; i < k; i++) {
-            (new DataRequestServer(NetworkInfo.NodeIps.get(i), fileName, new IDecryptionCallback() {
+            requests[i] = new DataRequestServer(NetworkInfo.NodeIps.get(i), fileName, new IDecryptionCallback() {
                 public void DataReceived(SecretShare.ShareInfo share)
                 {
                     data.secretShare.add(share);
@@ -44,10 +48,20 @@ public class DecryptionRequest {
                 {
                     System.out.println("Request error" + error);
                 }
-            })).start();
+            });
+
+            requests[i].start();
         }
 
-        while(data.secretShare.size() != k) { }
+        //while(data.secretShare.size() != k) { }
+
+        for(int i = 0; i < k; i++) {
+            try {
+                requests[i].join();
+            } catch (InterruptedException e) {
+                e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            }
+        }
 
         data.secretShare.add(DataStore.Shares.get(fileName));
 
