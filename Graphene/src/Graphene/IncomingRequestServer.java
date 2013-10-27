@@ -42,7 +42,7 @@ public class IncomingRequestServer extends Thread {
                 while ((str = br.readLine()) != null) {
                     Scanner sc = new Scanner(str);
                     String command = sc.next();
-                    String clientIp = fromClientSocket.getInetAddress().toString();
+                    String clientIp = fromClientSocket.getInetAddress().toString().replace("/","");
 
                     if(command.equals("decrypt"))
                     {
