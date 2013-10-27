@@ -35,7 +35,7 @@ import org.apache.commons.lang3.ArrayUtils;
  */
 public class EncryptUtil {
 
-    public static EncryptedData encrypt(String data) throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException, InvalidAlgorithmParameterException {
+    public static EncryptedData encrypt(String data, int k, int n) throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException, InvalidAlgorithmParameterException {
         byte[] dataArray = data.getBytes();
         KeyGenerator kgen = KeyGenerator.getInstance("AES");
         kgen.init(128);
@@ -52,7 +52,7 @@ public class EncryptUtil {
         byte[] encrypted = c.doFinal(dataArray);
         BigInteger keyAndIv = new BigInteger(ArrayUtils.addAll(iv, key.getEncoded()));
 
-        SecretShare.PublicInfo publicInfo = new SecretShare.PublicInfo(3, 2, SecretShare.createAppropriateModulusForSecret(keyAndIv), "");
+        SecretShare.PublicInfo publicInfo = new SecretShare.PublicInfo(n, k, SecretShare.createAppropriateModulusForSecret(keyAndIv), "");
 
         SecretShare secretShare = new SecretShare(publicInfo);
         SecretShare.SplitSecretOutput sso = secretShare.split(keyAndIv);
